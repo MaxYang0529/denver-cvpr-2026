@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Denver Field Journal · CVPR 2026 · 6.02–6.07</title>
+<meta name="description" content="丹佛 CVPR 2026 田野筆記 — 落磯山高原六日行程，每個景點附高清圖與 Google Maps 導航。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f0ebde;
+    --paper-2:#e8e1cf;
+    --ink:#22302b;
+    --ink-soft:#52605a;
+    --slate:#6c726b;
+    --rust:#ab5230;
+    --rust-soft:#c98a64;
+    --line:rgba(34,48,43,.16);
+    --line-strong:rgba(34,48,43,.34);
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --serif:'Fraunces',Georgia,serif;
+    --cjk:'Noto Serif TC',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--cjk);
+    font-weight:300;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* faint topographic backdrop across the whole page */
+  .topo-bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.5;pointer-events:none}
+  .topo-bg path{fill:none;stroke:var(--line);stroke-width:1}
+  .wrap{position:relative;z-index:1}
+  a{color:inherit}
+  img{display:block;width:100%;height:100%;object-fit:cover}
+
+  .mono{font-family:var(--mono);font-weight:400;letter-spacing:.04em}
+  .up{text-transform:uppercase}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:clamp(28px,6vw,80px);
+    overflow:hidden;
+    color:#f2ede1;
+  }
+  .hero__bg{position:absolute;inset:0;z-index:0}
+  .hero__bg img{filter:saturate(.9) contrast(1.02)}
+  .hero__bg::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(20,30,26,.55) 0%,rgba(20,30,26,.32) 38%,rgba(20,30,26,.72) 100%);}
+  .hero__grain{position:absolute;inset:0;z-index:1;opacity:.4;mix-blend-mode:soft-light}
+  .hero__grain path{fill:none;stroke:#fff;stroke-width:1}
+  .hero__inner{position:relative;z-index:2;max-width:1180px;width:100%;margin:0 auto}
+  .hero__kicker{font-family:var(--mono);font-size:clamp(10px,1.1vw,13px);letter-spacing:.42em;text-transform:uppercase;opacity:.9}
+  .hero__rule{height:1px;background:rgba(255,255,255,.5);margin:18px 0 6px;width:100%}
+  .hero__title{
+    font-family:var(--serif);font-weight:300;font-style:normal;
+    font-size:clamp(72px,18vw,232px);line-height:.9;letter-spacing:.01em;
+    text-transform:uppercase;margin:.06em 0;
+  }
+  .hero__title em{font-style:italic;font-weight:300;color:var(--rust-soft)}
+  .hero__sub{font-family:var(--cjk);font-weight:300;font-size:clamp(16px,2.4vw,28px);letter-spacing:.14em;margin-top:.2em}
+  .hero__meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:26px;font-family:var(--mono);font-size:clamp(10px,1.1vw,13px);letter-spacing:.16em;opacity:.92}
+  .hero__meta span{white-space:nowrap}
+  .hero__meta b{color:var(--rust-soft);font-weight:500}
+
+  /* corner registration crosshairs */
+  .reg-frame{position:absolute;inset:clamp(16px,3vw,34px);z-index:2;pointer-events:none}
+  .reg-frame i{position:absolute;width:22px;height:22px;opacity:.8}
+  .reg-frame i::before,.reg-frame i::after{content:"";position:absolute;background:rgba(255,255,255,.7)}
+  .reg-frame i::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-.5px)}
+  .reg-frame i::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-.5px)}
+  .reg-frame .tl{left:0;top:0}.reg-frame .tr{right:0;top:0}.reg-frame .bl{left:0;bottom:0}.reg-frame .br{right:0;bottom:0}
+
+  /* day index strip */
+  .index{position:relative;z-index:2;margin-top:clamp(34px,6vw,64px);display:flex;flex-wrap:wrap;gap:0;border-top:1px solid rgba(255,255,255,.4)}
+  .index a{
+    flex:1 1 120px;min-width:120px;padding:16px 14px 18px;
+    border-right:1px solid rgba(255,255,255,.22);
+    text-decoration:none;transition:background .25s;
+  }
+  .index a:last-child{border-right:none}
+  .index a:hover{background:rgba(255,255,255,.1)}
+  .index .d{font-family:var(--mono);font-size:12px;letter-spacing:.2em;opacity:.8}
+  .index .t{font-family:var(--cjk);font-weight:300;font-size:15px;margin-top:6px;letter-spacing:.06em}
+
+  /* ---------- SECTION SHELL ---------- */
+  main{max-width:1240px;margin:0 auto;padding:clamp(40px,7vw,120px) clamp(20px,5vw,64px)}
+
+  .day{margin-bottom:clamp(64px,10vw,140px)}
+  .day__head{display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:clamp(16px,3vw,40px);
+    padding-bottom:18px;border-bottom:1px solid var(--line-strong);margin-bottom:clamp(28px,4vw,52px)}
+  .day__no{display:flex;align-items:baseline;gap:12px;color:var(--ink)}
+  .day__word{font-family:var(--mono);font-size:13px;letter-spacing:.34em;color:var(--slate);align-self:flex-start;padding-top:.7em}
+  .day__num{font-family:var(--serif);font-weight:300;font-size:clamp(56px,11vw,128px);line-height:.8}
+  .day__num em{font-style:italic;color:var(--rust)}
+  .day__date{display:flex;flex-direction:column;gap:3px;padding-bottom:8px}
+  .day__dow{font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--rust)}
+  .day__full{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(20px,3vw,30px)}
+  .day__sub{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--slate)}
+  .day__profile{align-self:end;padding-bottom:10px}
+  .day__profile svg{display:block}
+  .day__profile path{fill:none;stroke:var(--line-strong);stroke-width:1.25}
+  .day__profile .pk{fill:var(--rust)}
+
+  /* plates grid */
+  .plates{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:clamp(20px,2.6vw,34px)}
+
+  .plate{position:relative;display:flex;flex-direction:column;background:var(--paper-2);
+    border:1px solid var(--line);transition:transform .3s ease,box-shadow .3s ease}
+  .plate:hover{transform:translateY(-4px);box-shadow:0 18px 40px -28px rgba(34,48,43,.6)}
+  .plate__img{position:relative;aspect-ratio:4/3;overflow:hidden;background:#cfc7b3}
+  .plate__img img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+  .plate:hover .plate__img img{transform:scale(1.045)}
+  .plate__img .corner{position:absolute;width:14px;height:14px;z-index:2}
+  .plate__img .corner::before,.plate__img .corner::after{content:"";position:absolute;background:rgba(240,235,222,.9)}
+  .plate__img .corner::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-.5px)}
+  .plate__img .corner::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-.5px)}
+  .plate__img .c1{left:8px;top:8px}.plate__img .c2{right:8px;top:8px}.plate__img .c3{left:8px;bottom:8px}.plate__img .c4{right:8px;bottom:8px}
+  .plate__idx{position:absolute;left:10px;top:10px;z-index:3;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+    color:#f2ede1;background:rgba(20,30,26,.6);padding:3px 7px;backdrop-filter:blur(2px)}
+  .plate__tag{position:absolute;right:10px;bottom:10px;z-index:3;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+    color:#f2ede1;background:var(--rust);padding:4px 9px;text-transform:uppercase}
+
+  .plate__body{padding:18px 18px 16px;display:flex;flex-direction:column;flex:1}
+  .plate__name{font-family:var(--cjk);font-weight:500;font-size:clamp(19px,2.2vw,23px);letter-spacing:.04em;line-height:1.3}
+  .plate__en{display:block;font-family:var(--serif);font-style:italic;font-weight:300;font-size:14px;color:var(--rust);
+    letter-spacing:.02em;margin-top:3px}
+  .plate__note{font-family:var(--cjk);font-weight:300;font-size:14.5px;color:var(--ink-soft);margin-top:12px;flex:1}
+  .plate__foot{margin-top:16px;padding-top:13px;border-top:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .coord{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--slate);line-height:1.5}
+  .nav{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+    color:var(--ink);border:1px solid var(--ink);padding:7px 12px;white-space:nowrap;transition:all .25s}
+  .nav:hover{background:var(--ink);color:var(--paper)}
+  .nav span{color:var(--rust);transition:color .25s}
+  .nav:hover span{color:var(--rust-soft)}
+
+  /* conference ledger band */
+  .band{grid-column:1/-1;display:flex;align-items:center;gap:clamp(12px,2vw,26px);flex-wrap:wrap;
+    padding:18px 22px;border:1px solid var(--line-strong);background:transparent;
+    position:relative}
+  .band::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ink)}
+  .band--accent::before{background:var(--rust)}
+  .band__tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:#f2ede1;background:var(--ink);padding:5px 11px}
+  .band--accent .band__tag{background:var(--rust)}
+  .band__txt{font-family:var(--cjk);font-weight:500;font-size:clamp(16px,2vw,20px);letter-spacing:.05em}
+  .band__when{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--rust);text-transform:uppercase}
+  .band__loc{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--slate);margin-left:auto}
+  .band .nav{margin-left:8px}
+
+  /* ---------- FOOTER ---------- */
+  footer{position:relative;z-index:1;border-top:1px solid var(--line-strong);
+    max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,72px) clamp(20px,5vw,64px) clamp(60px,8vw,96px)}
+  .foot__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px}
+  .foot__title{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(28px,5vw,52px);line-height:1.05;grid-column:1/-1;margin-bottom:14px}
+  .foot__h{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);margin-bottom:10px}
+  .foot__p{font-family:var(--cjk);font-weight:300;font-size:13.5px;color:var(--ink-soft);line-height:1.8}
+  .foot__p a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line-strong)}
+  .foot__sign{grid-column:1/-1;margin-top:24px;padding-top:20px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--slate)}
+
+  @media(max-width:640px){
+    .day__head{grid-template-columns:auto 1fr;}
+    .day__profile{display:none}
+    .index a{flex:1 1 50%;min-width:50%}
+    .band__loc{margin-left:0;width:100%}
+    .band .nav{margin-left:0}
+  }
+</style>
+</head>
+<body>
+
+<!-- whole-page faint contour backdrop -->
+<svg class="topo-bg" viewBox="0 0 1440 2400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <path d="M-50 260 C 240 180, 470 320, 720 250 S 1180 150, 1500 280"/>
+  <path d="M-50 330 C 260 250, 480 400, 740 320 S 1190 230, 1500 360"/>
+  <path d="M-50 760 C 300 690, 520 850, 760 760 S 1220 660, 1500 800"/>
+  <path d="M-50 840 C 300 770, 540 930, 780 840 S 1230 740, 1500 880"/>
+  <path d="M-50 1320 C 280 1240, 520 1410, 770 1320 S 1210 1220, 1500 1360"/>
+  <path d="M-50 1400 C 300 1320, 540 1490, 800 1400 S 1240 1300, 1500 1440"/>
+  <path d="M-50 1880 C 280 1800, 520 1970, 770 1880 S 1210 1780, 1500 1920"/>
+  <path d="M-50 2240 C 280 2160, 520 2330, 770 2240 S 1210 2140, 1500 2280"/>
+</svg>
+
+<div class="wrap">
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="hero__bg">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Dillon_Reservoir.jpg" alt="落磯山環抱下的 Dillon Reservoir 高山水庫">
+  </div>
+  <svg class="hero__grain" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path d="M-50 540 C 300 470, 520 640, 770 540 S 1210 440, 1500 580"/>
+    <path d="M-50 600 C 300 530, 540 700, 800 600 S 1240 500, 1500 640"/>
+    <path d="M-50 660 C 280 590, 520 760, 770 660 S 1210 560, 1500 700"/>
+  </svg>
+  <div class="reg-frame"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+
+  <div class="hero__inner">
+    <p class="hero__kicker">Field Journal · Survey of a Journey · No. 2606</p>
+    <div class="hero__rule"></div>
+    <h1 class="hero__title">Den<em>v</em>er</h1>
+    <p class="hero__sub">落磯山高原 · 田野筆記 · CVPR 2026</p>
+    <div class="hero__meta">
+      <span><b>06.02 — 06.07</b> · 2026</span>
+      <span>39.7392° N · 104.9903° W</span>
+      <span>ELEV. <b>5,280 FT</b> · MILE HIGH</span>
+      <span>15 STATIONS · 6 TRANSECTS</span>
+    </div>
+
+    <nav class="index" aria-label="行程索引">
+      <a href="#d1"><span class="d mono">DAY 01 · 6/2</span><span class="t">抵達 · 註冊</span></a>
+      <a href="#d2"><span class="d mono">DAY 02 · 6/3</span><span class="t">Workshop · 巴爾湖</span></a>
+      <a href="#d3"><span class="d mono">DAY 03 · 6/4</span><span class="t">自然科學館 · 16th</span></a>
+      <a href="#d4"><span class="d mono">DAY 04 · 6/5</span><span class="t">野生庇護所 · 台灣夜</span></a>
+      <a href="#d5"><span class="d mono">DAY 05 · 6/6</span><span class="t">I-70 落磯公路</span></a>
+      <a href="#d6"><span class="d mono">DAY 06 · 6/7</span><span class="t">球場 · 聯合車站</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===================== DAY 1 ===================== -->
+  <section class="day" id="d1">
+    <header class="day__head">
+      <div class="day__no"><span class="day__word">DAY</span><span class="day__num">0<em>1</em></span></div>
+      <div class="day__date">
+        <span class="day__dow">TUE</span>
+        <span class="day__full">June 02</span>
+        <span class="day__sub">Arrival · Registration</span>
+      </div>
+      <div class="day__profile">
+        <svg width="160" height="46" viewBox="0 0 160 46" aria-hidden="true">
+          <path d="M0 40 L40 38 L70 30 L100 24 L130 18 L160 14"/>
+          <circle class="pk" cx="160" cy="14" r="3"/>
+        </svg>
+      </div>
+    </header>
+    <div class="plates">
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/DenverAirport2023.jpg/1920px-DenverAirport2023.jpg" alt="丹佛國際機場帳篷狀白色屋頂航廈">
+          <span class="plate__idx mono">PL.01</span><span class="plate__tag">14:30 抵達</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">丹佛國際機場<span class="plate__en">Denver International Airport</span></h3>
+          <p class="plate__note">獨特的白色帳篷屋頂呼應落磯山雪峰。班機 14:30 降落，取車後旅程正式啟程。</p>
+          <div class="plate__foot">
+            <span class="coord">39.8561°N 104.6737°W<br>ELEV 5,434 FT</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Denver%20International%20Airport">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Green_Mountain_%28Lakewood%2C_Colorado%29.jpg/1920px-Green_Mountain_%28Lakewood%2C_Colorado%29.jpg" alt="Lakewood 的綠山地景">
+          <span class="plate__idx mono">PL.02</span><span class="plate__tag">午後</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">Lakewood City Commons<span class="plate__en">Lakewood, Colorado</span></h3>
+          <p class="plate__note">落磯山腳下的開闊購物生活區。先採買補給、用餐，適應一英里高的乾爽空氣。（圖為 Lakewood 綠山地景）</p>
+          <div class="plate__foot">
+            <span class="coord">39.7055°N 105.0814°W<br>ELEV 5,518 FT</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Lakewood%20City%20Commons%2C%20Lakewood%2C%20CO">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Bear_at_the_Denver_Convention_Center_%285185987963%29.jpg/1920px-Bear_at_the_Denver_Convention_Center_%285185987963%29.jpg" alt="巨大藍熊探頭望進科羅拉多會議中心">
+          <span class="plate__idx mono">PL.03</span><span class="plate__tag">傍晚 報到</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">科羅拉多會議中心<span class="plate__en">Colorado Convention Center · CVPR 報到</span></h3>
+          <p class="plate__note">招牌「藍熊」探頭望進玻璃帷幕。在此完成 CVPR 2026 註冊、領取證件與議程手冊。</p>
+          <div class="plate__foot">
+            <span class="coord">39.7439°N 104.9952°W<br>ELEV 5,210 FT</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Colorado%20Convention%20Center%2C%20Denver">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===================== DAY 2 ===================== -->
+  <section class="day" id="d2">
+    <header class="day__head">
+      <div class="day__no"><span class="day__word">DAY</span><span class="day__num">0<em>2</em></span></div>
+      <div class="day__date">
+        <span class="day__dow">WED</span>
+        <span class="day__full">June 03</span>
+        <span class="day__sub">Workshop · Wetland</span>
+      </div>
+      <div class="day__profile">
+        <svg width="160" height="46" viewBox="0 0 160 46" aria-hidden="true">
+          <path d="M0 22 L40 20 L70 22 L100 30 L130 36 L160 34"/>
+          <circle class="pk" cx="0" cy="22" r="3"/>
+        </svg>
+      </div>
+    </header>
+    <div class="plates">
+
+      <div class="band">
+        <span class="band__tag">CVPR</span>
+        <span class="band__when">白天</span>
+        <span class="band__txt">Workshops &amp; Tutorials · 主題工作坊</span>
+        <span class="band__loc">COLORADO CONVENTION CENTER</span>
+        <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Colorado%20Convention%20Center%2C%20Denver">導航 <span>↗</span></a>
+      </div>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Barr_Lake_%28146440918%29.jpg/1920px-Barr_Lake_%28146440918%29.jpg" alt="巴爾湖州立公園的湖景">
+          <span class="plate__idx mono">PL.04</span><span class="plate__tag">下午</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">巴爾湖 &amp; 訪客中心<span class="plate__en">Barr Lake · Pat Schroeder Visitor Center</span></h3>
+          <p class="plate__note">城市東北的靜謐濕地保護區。環湖步道與賞鳥木棧道延伸入水，白頭海雕與鵜鶘的家。</p>
+          <div class="plate__foot">
+            <span class="coord">39.9447°N 104.7458°W<br>ELEV 5,100 FT</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Barr%20Lake%20State%20Park%20Nature%20Center">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===================== DAY 3 ===================== -->
+  <section class="day" id="d3">
+    <header class="day__head">
+      <div class="day__no"><span class="day__word">DAY</span><span class="day__num">0<em>3</em></span></div>
+      <div class="day__date">
+        <span class="day__dow">THU</span>
+        <span class="day__full">June 04</span>
+        <span class="day__sub">Workshop · Museum · Mall</span>
+      </div>
+      <div class="day__profile">
+        <svg width="160" height="46" viewBox="0 0 160 46" aria-hidden="true">
+          <path d="M0 24 L40 22 L70 26 L100 18 L130 28 L160 30"/>
+          <circle class="pk" cx="100" cy="18" r="3"/>
+        </svg>
+      </div>
+    </header>
+    <div class="plates">
+
+      <div class="band">
+        <span class="band__tag">CVPR</span>
+        <span class="band__when">白天</span>
+        <span class="band__txt">Workshops &amp; Tutorials · 主題工作坊</span>
+        <span class="band__loc">COLORADO CONVENTION CENTER</span>
+        <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Colorado%20Convention%20Center%2C%20Denver">導航 <span>↗</span></a>
+      </div>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Denver_Museum_of_Nature_and_Science_View_from_north_west.jpg/1920px-Denver_Museum_of_Nature_and_Science_View_from_north_west.jpg" alt="丹佛自然科學博物館建築外觀">
+          <span class="plate__idx mono">PL.05</span><span class="plate__tag">下午</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">丹佛自然科學博物館<span class="plate__en">Denver Museum of Nature &amp; Science</span></h3>
+          <p class="plate__note">恐龍化石、太空、寶石礦物與落磯山生態。頂層觀景窗可眺望派克峰天際線。</p>
+          <div class="plate__foot">
+            <span class="coord">39.7475°N 104.9425°W<br>CITY PARK</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Denver%20Museum%20of%20Nature%20%26%20Science">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/16th_Street_Mall%2C_Denver_USA_-_panoramio.jpg/1920px-16th_Street_Mall%2C_Denver_USA_-_panoramio.jpg" alt="丹佛市中心 16th Street Mall 徒步大道">
+          <span class="plate__idx mono">PL.06</span><span class="plate__tag">晚上</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">16th Street Mall<span class="plate__en">Downtown Pedestrian Promenade</span></h3>
+          <p class="plate__note">市中心無車徒步大道。免費接駁電車穿梭、街頭鋼琴與餐廳林立，丹佛夜生活的中軸。</p>
+          <div class="plate__foot">
+            <span class="coord">39.7464°N 104.9921°W<br>ELEV 5,280 FT</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=16th%20Street%20Mall%2C%20Denver">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===================== DAY 4 ===================== -->
+  <section class="day" id="d4">
+    <header class="day__head">
+      <div class="day__no"><span class="day__word">DAY</span><span class="day__num">0<em>4</em></span></div>
+      <div class="day__date">
+        <span class="day__dow">FRI</span>
+        <span class="day__full">June 05</span>
+        <span class="day__sub">Conference · Sanctuary · Taiwan Night</span>
+      </div>
+      <div class="day__profile">
+        <svg width="160" height="46" viewBox="0 0 160 46" aria-hidden="true">
+          <path d="M0 26 L40 28 L70 20 L100 22 L130 30 L160 24"/>
+          <circle class="pk" cx="70" cy="20" r="3"/>
+        </svg>
+      </div>
+    </header>
+    <div class="plates">
+
+      <div class="band">
+        <span class="band__tag">CVPR</span>
+        <span class="band__when">白天</span>
+        <span class="band__txt">Main Conference &amp; Expo · 主會議 / 展覽</span>
+        <span class="band__loc">COLORADO CONVENTION CENTER</span>
+        <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Colorado%20Convention%20Center%2C%20Denver">導航 <span>↗</span></a>
+      </div>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/1/15/Central_compound_and_ed_center.jpg" alt="野生動物庇護所的中央園區與高架步道">
+          <span class="plate__idx mono">PL.07</span><span class="plate__tag">下午</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">野生動物庇護所<span class="plate__en">The Wild Animal Sanctuary · Keenesburg</span></h3>
+          <p class="plate__note">全美最大的猛獸庇護所。1.5 英里高架步道在獅、虎、熊群上方延伸，自城區東北約一小時車程。</p>
+          <div class="plate__foot">
+            <span class="coord">40.1073°N 104.5153°W<br>≈ 50 MIN DRIVE</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=The%20Wild%20Animal%20Sanctuary%2C%20Keenesburg%2C%20CO">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <div class="band band--accent">
+        <span class="band__tag">CVPR</span>
+        <span class="band__when">晚上</span>
+        <span class="band__txt">Taiwan Night · 台灣之夜</span>
+        <span class="band__loc">與台灣電腦視覺社群相聚</span>
+        <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Colorado%20Convention%20Center%2C%20Denver">導航 <span>↗</span></a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== DAY 5 ===================== -->
+  <section class="day" id="d5">
+    <header class="day__head">
+      <div class="day__no"><span class="day__word">DAY</span><span class="day__num">0<em>5</em></span></div>
+      <div class="day__date">
+        <span class="day__dow">SAT</span>
+        <span class="day__full">June 06</span>
+        <span class="day__sub">I-70 Rocky Mountains Road Trip</span>
+      </div>
+      <div class="day__profile">
+        <svg width="200" height="46" viewBox="0 0 200 46" aria-hidden="true">
+          <path d="M0 36 L40 30 L80 10 L110 6 L140 18 L170 24 L200 22"/>
+          <circle class="pk" cx="110" cy="6" r="3.5"/>
+        </svg>
+      </div>
+    </header>
+    <div class="plates">
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Downtown_Idaho_Springs%2C_CO_IMG_5437.JPG" alt="Idaho Springs 歷史礦業小鎮主街">
+          <span class="plate__idx mono">PL.08</span><span class="plate__tag">站點 01</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">Idaho Springs<span class="plate__en">Historic Mining Town</span></h3>
+          <p class="plate__note">I-70 旁的淘金歷史小鎮。Miner Street 的老式街屋、溫泉與礦坑遺跡，公路之旅的第一站。</p>
+          <div class="plate__foot">
+            <span class="coord">39.7425°N 105.5136°W<br>ELEV 7,526 FT</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Idaho%20Springs%2C%20CO">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Georgetown%2C_Colorado_from_Interstate_70.jpg" alt="自 I-70 俯瞰群山環抱的喬治城">
+          <span class="plate__idx mono">PL.09</span><span class="plate__tag">站點 02</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">Georgetown<span class="plate__en">Victorian Silver Town</span></h3>
+          <p class="plate__note">群山環抱的維多利亞式銀礦古鎮。蜿蜒的喬治城環線蒸汽鐵道與保存完好的十九世紀街景。</p>
+          <div class="plate__foot">
+            <span class="coord">39.7061°N 105.6972°W<br>ELEV 8,530 FT</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Georgetown%2C%20Colorado">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Loveland_Pass_P4170518.jpg/1920px-Loveland_Pass_P4170518.jpg" alt="Loveland Pass 大陸分水嶺高山埡口">
+          <span class="plate__idx mono">PL.10</span><span class="plate__tag">最高點</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">Loveland Pass<span class="plate__en">Continental Divide · 大陸分水嶺</span></h3>
+          <p class="plate__note">海拔 3,655 公尺的大陸分水嶺。雪線之上的高山埡口，雨水自此分流向兩大洋——全程最高點。</p>
+          <div class="plate__foot">
+            <span class="coord">39.6638°N 105.8790°W<br>ELEV 11,990 FT ▲</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Loveland%20Pass%2C%20Colorado">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Dillon_Reservoir.jpg" alt="群峰倒映的 Dillon Reservoir 高山水庫">
+          <span class="plate__idx mono">PL.11</span><span class="plate__tag">站點 04</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">Dillon Reservoir<span class="plate__en">Alpine Lake</span></h3>
+          <p class="plate__note">群峰環抱的高山水庫，倒映十四峰雪線。湖畔帆船點點，繞行至 Dillon 與 Frisco 小鎮。</p>
+          <div class="plate__foot">
+            <span class="coord">39.6092°N 106.0601°W<br>ELEV 9,017 FT</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Dillon%20Reservoir%2C%20Colorado">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/e/e5/2011-07-07_10.18.17.jpg" alt="自山頂俯瞰 Silverthorne 小鎮">
+          <span class="plate__idx mono">PL.12</span><span class="plate__tag">站點 05</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">Silverthorne<span class="plate__en">Mountain Gateway</span></h3>
+          <p class="plate__note">藍河穿鎮而過，暢貨中心與落磯山度假門戶。公路之旅的折返與補給點，向晚返回丹佛。</p>
+          <div class="plate__foot">
+            <span class="coord">39.6280°N 106.0717°W<br>ELEV 8,730 FT</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Silverthorne%2C%20Colorado">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <div class="band band--accent">
+        <span class="band__tag">CVPR</span>
+        <span class="band__when">晚上</span>
+        <span class="band__txt">Conference Reception · 大會晚宴酒會</span>
+        <span class="band__loc">返回市區 · COLORADO CONVENTION CENTER</span>
+        <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Colorado%20Convention%20Center%2C%20Denver">導航 <span>↗</span></a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== DAY 6 ===================== -->
+  <section class="day" id="d6">
+    <header class="day__head">
+      <div class="day__no"><span class="day__word">DAY</span><span class="day__num">0<em>6</em></span></div>
+      <div class="day__date">
+        <span class="day__dow">SUN</span>
+        <span class="day__full">June 07</span>
+        <span class="day__sub">Conference · Ballpark · Historic Denver</span>
+      </div>
+      <div class="day__profile">
+        <svg width="160" height="46" viewBox="0 0 160 46" aria-hidden="true">
+          <path d="M0 22 L40 24 L70 20 L100 28 L130 24 L160 34"/>
+          <circle class="pk" cx="0" cy="22" r="3"/>
+        </svg>
+      </div>
+    </header>
+    <div class="plates">
+
+      <div class="band">
+        <span class="band__tag">CVPR</span>
+        <span class="band__when">白天</span>
+        <span class="band__txt">Main Conference &amp; Expo · 主會議 / 展覽</span>
+        <span class="band__loc">COLORADO CONVENTION CENTER</span>
+        <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Colorado%20Convention%20Center%2C%20Denver">導航 <span>↗</span></a>
+      </div>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Coors_Field_July_2015.jpg" alt="Coors Field 棒球場與比賽場景">
+          <span class="plate__idx mono">PL.13</span><span class="plate__tag">下午</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">Coors Field 看 MLB<span class="plate__en">Colorado Rockies Ballpark</span></h3>
+          <p class="plate__note">科羅拉多落磯隊主場。一英里高的紅土球場——稀薄空氣讓全壘打飛得更遠，啤酒與棒球的午後。</p>
+          <div class="plate__foot">
+            <span class="coord">39.7559°N 104.9942°W<br>ROW 20 · MILE HIGH</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Coors%20Field%2C%20Denver">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/2/22/Denver_union_station.jpg" alt="丹佛聯合車站歷史建築">
+          <span class="plate__idx mono">PL.14</span><span class="plate__tag">傍晚</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">丹佛聯合車站<span class="plate__en">Denver Union Station · 1881</span></h3>
+          <p class="plate__note">1881 年的歷史火車站，今日化身時尚大廳與餐酒館。屋頂「Union Station · Travel by Train」霓虹地標亮起。</p>
+          <div class="plate__foot">
+            <span class="coord">39.7527°N 105.0008°W<br>LODO DISTRICT</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Denver%20Union%20Station">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="plate">
+        <div class="plate__img">
+          <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/9/9f/Larimer_Square_Denver%2C_December_2025.jpg" alt="Larimer Square 街區與頭頂燈串">
+          <span class="plate__idx mono">PL.15</span><span class="plate__tag">夜</span>
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        </div>
+        <div class="plate__body">
+          <h3 class="plate__name">Larimer Square<span class="plate__en">Denver's Oldest Block</span></h3>
+          <p class="plate__note">丹佛最古老的街區。頭頂垂掛的暖色燈串、紅磚老屋與餐酒館——旅程最浪漫的收尾一格。</p>
+          <div class="plate__foot">
+            <span class="coord">39.7479°N 104.9990°W<br>EST. 1858</span>
+            <a class="nav" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Larimer%20Square%2C%20Denver">導航 <span>↗</span></a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <p class="foot__title">End of Survey.<br>落磯山的空氣，記在筆記裡。</p>
+  <div class="foot__grid">
+    <div>
+      <p class="foot__h">Expedition</p>
+      <p class="foot__p">丹佛 · CVPR 2026<br>2026 年 6 月 2 日 – 6 月 7 日<br>15 處站點 · 6 段路線<br>基準海拔 5,280 英尺</p>
+    </div>
+    <div>
+      <p class="foot__h">Navigation</p>
+      <p class="foot__p">每張圖版的「導航」鈕將以你目前位置為起點，於 Google Maps 直接開啟路線規劃。</p>
+    </div>
+    <div>
+      <p class="foot__h">Imagery</p>
+      <p class="foot__p">所有照片均以外部連結引用自 <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a>，未經下載。Lakewood 一圖為當地綠山地景。</p>
+    </div>
+    <div class="foot__sign">
+      <span>ALTITUDE SURVEY · No. 2606</span>
+      <span>39.7392° N · 104.9903° W</span>
+      <span>BUILT WITH CLAUDE CODE</span>
+    </div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
