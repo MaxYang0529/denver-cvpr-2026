@@ -8,7 +8,7 @@
 
 單頁旅遊網站，以「Altitude Survey（高海拔田野調查）」設計哲學呈現：
 
-- 6 段每日行程（DAY 01–06），共 16 處景點站點
+- 6 段每日行程（DAY 01–06），共 18 處景點站點
 - 每個景點皆附 **高清代表圖**（以外部連結引用自 [Wikimedia Commons](https://commons.wikimedia.org)，未經下載）
 - 每個景點皆附 **Google Maps 導航鈕**，點擊即以你目前位置為起點開啟路線
 - CVPR 議程以細長 ledger band 呈現
